@@ -1,0 +1,30 @@
+# Habilita o RewriteEngine
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Define a base path para o projeto
+    RewriteBase /encomendas_chef_gestor/
+    
+    # Permite acesso direto a arquivos e diretórios existentes
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Redireciona todas as outras requisições para public/app.php
+    RewriteRule ^(.*)$ public/app.php [QSA,L]
+</IfModule>
+
+# Protege arquivos sensíveis
+<FilesMatch "^(\.env|composer\.json|composer\.lock|\.htaccess)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Desabilita listagem de diretórios
+Options -Indexes
+
+# Configurações de PHP
+<IfModule mod_php7.c>
+    php_value upload_max_filesize 5M
+    php_value post_max_size 5M
+</IfModule>
+
