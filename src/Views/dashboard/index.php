@@ -8,7 +8,7 @@ ob_start();
 
 <style>
     .dashboard-container {
-        margin-left: 400px; 
+        margin-left: 600px; 
         margin-top: 60px; 
         padding: 20px;
         background-color: #F4C430; 
