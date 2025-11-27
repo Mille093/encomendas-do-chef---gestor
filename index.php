@@ -1,16 +1,23 @@
 <?php
 
+/**
+ * Redirecionamento para o sistema principal
+ * Este arquivo redireciona para o front controller correto
+ */
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+// Inicia a sessão
+session_start();
 
+// Carrega configurações
+$config = require __DIR__ . '/config/app.php';
+$baseUrl = $config['base_url'];
+
+// Verifica se é uma requisição para Ajuda ou Termos (páginas públicas)
 $controller = $_GET['controller'] ?? '';
 $action = $_GET['action'] ?? 'index';
 
-
 if ($controller === 'Ajuda' && $action === 'index') {
-    $controllerFile = 'src/Controllers/AjudaController.php'; // CAMINHO CORRETO
-
+    $controllerFile = 'src/Controllers/AjudaController.php';
     if (file_exists($controllerFile)) {
         require_once $controllerFile;
         $ajuda = new AjudaController();
@@ -21,10 +28,8 @@ if ($controller === 'Ajuda' && $action === 'index') {
     }
 }
 
-
 if ($controller === 'Termos' && $action === 'index') {
     $controllerFile = 'src/Controllers/TermosController.php'; 
-
     if (file_exists($controllerFile)) {
         require_once $controllerFile;
         $termos = new TermosController();
@@ -35,26 +40,12 @@ if ($controller === 'Termos' && $action === 'index') {
     }
 }
 
+// Se houver sessão ativa, redireciona para o dashboard
+if (isset($_SESSION['gestor_id'])) {
+    header("Location: {$baseUrl}/public/app.php");
+    exit;
+}
 
-?>
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Acesso Restrito</title>
-    <style>
-        body { font-family: Arial; text-align: center; padding: 50px; background: #f4f4f4; }
-        .box { background: white; padding: 40px; border-radius: 10px; display: inline-block; box-shadow: 0 4px 20px rgba(0,0,0,0.1); max-width: 500px; }
-        h1 { color: #C0392B; }
-        a { color: #FFD700; font-weight: bold; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-    </style>
-</head>
-<body>
-    <div class="box">
-        <h1>Acesso Direto Bloqueado</h1>
-        <p>Esta é uma página interna de ajuda.</p>
-        <p><a href="index.php?controller=Ajuda&action=index">Abrir Central de Ajuda</a></p> <!-- CORRIGIDO O TYPO: controllers → controller -->
-    </div>
-</body>
-</html>
+// Se não houver sessão, redireciona para o login
+header("Location: {$baseUrl}/public/app.php/login");
+exit;
