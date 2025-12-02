@@ -19,7 +19,12 @@ $title = 'Login';
             flex-direction: column; 
             overflow: hidden; 
         }
-
+         .header img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%; 
+            object-fit: cover; 
+        }
         .header {
             background-color: #f4c430;
             color: #fff;
@@ -32,7 +37,9 @@ $title = 'Login';
             height: 7% ;
             position: fixed; 
             top: 0;
-            z-index: 1000; 
+            z-index: 100;
+            display: flex;
+            justify-content: center; 
         }
 
         .login-card {
@@ -42,11 +49,10 @@ $title = 'Login';
             width: 100%;
             height: calc(100vh - 60px); 
             text-align: center;
-            margin-top: 300px;
+           margin: 120px auto 50px auto;
             overflow-y: auto; 
             box-sizing: border-box;
         }
-
        
         .footer {
             background-color: #f4c430;
@@ -85,6 +91,7 @@ $title = 'Login';
             display: flex;
             flex-direction: column;
             max-width:700px; 
+            gap: 18px;
             margin: 0 auto; 
             border-radius: 10px;
         }
@@ -131,10 +138,7 @@ $title = 'Login';
 </head>
 <body>
     <div class="header">
-        <a href="<?= $config['base_url'] ?>/">
-            <img src="public/assets/chef.png" alt="Logo Encomendas do Chef" style="max-width: 60px; height:60px auto; vertical-align: middle;">
-        </a>
-
+            <img src="public/assets/chef.png"  >
         Encomendas do Chef - Gestor
     </div>
 

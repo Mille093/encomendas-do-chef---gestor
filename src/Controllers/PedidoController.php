@@ -18,6 +18,7 @@ class PedidoController extends Controller
      */
     public function index()
     {
+        // ... (Código existente)
         $this->requireAuth();
         
         $filter = $_GET['status'] ?? '';
@@ -47,6 +48,7 @@ class PedidoController extends Controller
      */
     public function show($id)
     {
+        // ... (Código existente)
         $this->requireAuth();
         
         // Buscar pedido com dados do cliente
@@ -83,10 +85,72 @@ class PedidoController extends Controller
     }
 
     /**
+     * Exibe a tela de monitoramento de pedidos (Em Andamento).
+     * Essa é a tela que criamos com o CSS estilizado.
+     */
+    public function monitorarPedidos()
+    {
+        $this->requireAuth();
+        
+        $pdo = \Core\Database::getInstance()->getConnection();
+
+        // 1. Consulta SQL para buscar pedidos em andamento (pendente ou em_preparacao) E seus itens
+        $stmt = $pdo->prepare("
+            SELECT 
+                p.ped_numero, 
+                c.cli_nome, 
+                p.ped_status, 
+                p.ped_data_elaboracao,
+                p.ped_observacao,
+                ip.ip_quantidade,
+                pr.prod_nome
+            FROM pedidos p
+            JOIN clientes c ON p.cli_codigo = c.cli_codigo
+            JOIN itens_pedido ip ON p.ped_numero = ip.ped_numero
+            JOIN produtos pr ON ip.prod_codigo = pr.prod_codigo
+            WHERE p.ped_status IN ('pendente', 'em_preparacao')
+            ORDER BY p.ped_data_elaboracao ASC
+        ");
+        
+        $stmt->execute();
+        $dadosCru = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        // 2. Agrupa os itens por Pedido (Estruturando os dados para a View)
+        $pedidosAgrupados = [];
+        foreach ($dadosCru as $linha) {
+            $ped_numero = $linha['ped_numero'];
+
+            // Se o pedido ainda não foi adicionado ao array agrupado, inicializa
+            if (!isset($pedidosAgrupados[$ped_numero])) {
+                $pedidosAgrupados[$ped_numero] = [
+                    'numero' => $ped_numero,
+                    'cliente' => $linha['cli_nome'],
+                    'status' => $linha['ped_status'],
+                    'data' => $linha['ped_data_elaboracao'],
+                    'observacao' => $linha['ped_observacao'],
+                    'itens' => []
+                ];
+            }
+            
+            // Adiciona o item à lista de itens do pedido
+            $pedidosAgrupados[$ped_numero]['itens'][] = [
+                'quantidade' => $linha['ip_quantidade'],
+                'nome' => $linha['prod_nome']
+            ];
+        }
+
+        // 3. Carrega a View, passando os dados estruturados
+        return $this->view('pedidos/monitorar', [
+            'pedidos' => $pedidosAgrupados
+        ]);
+    }
+
+    /**
      * Atualiza status do pedido
      */
     public function updateStatus($id)
     {
+        // ... (Código existente)
         $this->requireAuth();
         
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -137,6 +201,7 @@ class PedidoController extends Controller
      */
     public function cancel($id)
     {
+        // ... (Código existente)
         $this->requireAuth();
         
         $pedido = $this->pedidoModel->find($id);
@@ -171,6 +236,7 @@ class PedidoController extends Controller
      */
     public function getEstats()
     {
+        // ... (Código existente)
         $this->requireAuth();
         
         // Buscar estatísticas através do Model

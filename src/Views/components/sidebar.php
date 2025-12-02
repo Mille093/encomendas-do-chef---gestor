@@ -1,6 +1,14 @@
 <?php
-$currentController = $_GET['controller'] ?? '';
-$isAjuda = ($currentController === 'Ajuda');
+// O código para obter o caminho atual da URL limpa é crucial para o destaque 'active'.
+$currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+// Remove a base do projeto (o que aparece antes da rota real)
+// Use o caminho mais limpo '/pedidos/monitorar' para comparação.
+$currentPath = str_replace('/encomendas_chef_gestor/public/index.php', '', $currentPath);
+$currentPath = str_replace('/public/index.php', '', $currentPath); 
+$currentPath = trim($currentPath, '/'); 
+
+// As variáveis antigas como $currentController e $isAjuda baseadas em GET são removidas.
 ?>
 
 <style>
@@ -66,6 +74,7 @@ $isAjuda = ($currentController === 'Ajuda');
         width: calc(100% - 40px); 
     }
 
+    /* Ajustado para comparar com o caminho limpo */
     .sidebar a.active {
         background-color: #f4c430; 
         color: #000; 
@@ -93,9 +102,28 @@ $isAjuda = ($currentController === 'Ajuda');
 
 <div id="sidebar" class="sidebar">
     
-    <a href="index.php?controller=Perfil&action=index" class="<?= strpos($currentPath, '/perfil') !== false ? 'active' : '' ?>">Monitorar Pedidos</a>
-    <a href="index.php?controller=Carrinho&action=visualizar" class="<?= strpos($currentPath, '/carrinho') !== false ? 'active' : '' ?>">Gerar Relatório</a>
-    <a href="index.php?controller=Pedido&action=listar" class="<?= strpos($currentPath, '/pedido') !== false ? 'active' : '' ?>">Gestão de Promoção</a>
-    <a href="index.php?controller=Configuracoes&action=index" class="<?= strpos($currentPath, '/configuracoes') !== false ? 'active' : '' ?>">Gerenciar Cardápio</a>
-   <a href="index.php?controller=Ajuda&action=index" class="<?= $isAjuda ? 'active' : '' ?>">Ajuda</a>
+  <a href="/encomendas_chef_gestor/public/index.php/pedidos/monitorar" 
+    class="<?= strpos($currentPath, 'pedidos/monitorar') !== false ? 'active' : '' ?>">
+    Monitorar Pedidos
+</a>
+    
+    <a href="/encomendas_chef_gestor/public/index.php/relatorios/gerar" 
+        class="<?= strpos($currentPath, 'relatorios/gerar') !== false ? 'active' : '' ?>">
+        Gerar Relatório
+    </a>
+    
+    <a href="/promocoes/gestao" 
+        class="<?= strpos($currentPath, 'promocoes/gestao') !== false ? 'active' : '' ?>">
+        Gestão de Promoção
+    </a>
+    
+    <a href="/cardapio/gerenciar" 
+        class="<?= strpos($currentPath, 'cardapio/gerenciar') !== false ? 'active' : '' ?>">
+        Gerenciar Cardápio
+    </a>
+    
+    <a href="/ajuda" 
+        class="<?= $currentPath === 'ajuda' ? 'active' : '' ?>">
+        Ajuda
+    </a>
 </div>

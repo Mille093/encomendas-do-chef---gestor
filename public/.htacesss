@@ -1,0 +1,16 @@
+# public/.htaccess
+
+# Ativa o módulo de reescrita de URLs
+RewriteEngine On
+
+# Define o caminho base da reescrita. 
+# Se seu projeto está na raiz do servidor, use /
+# Se estiver em uma subpasta (como parece ser o caso), use o caminho dela:
+RewriteBase /encomendas_chef_gestor/public/
+
+# 1. Ignora requisições para arquivos e diretórios existentes
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# 2. Redireciona todas as outras requisições para o index.php
+RewriteRule ^(.*)$ index.php/$1 [L]

@@ -71,9 +71,8 @@ $userName = $_SESSION['gestor_nome'] ?? 'Usuário';
 
 <header class="topbar">
     <div class="topbar-left">
-         <a href="<?= $config['base_url'] ?>/">
             <img src="public/assets/chef.png" alt="Logo Encomendas do Chef" style="max-width: 60px; height:60px auto; vertical-align: middle;">
-        </a>
+       
         <h1 class="page-title"><?= $pageTitle ?? 'Encomendas do Chef - Gestor' ?></h1>
     </div>
     

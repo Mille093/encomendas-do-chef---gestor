@@ -56,20 +56,31 @@ class Router
         $requestMethod = $_SERVER['REQUEST_METHOD'];
         $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
+        // --- Início da Limpeza de URI ---
         // Remove a base do projeto da URI
         $requestUri = str_replace('/encomendas_chef_gestor', '', $requestUri);
         
-        // Remove /public/ da URI se existir
+        // Remove /public/ da URI
         $requestUri = str_replace('/public', '', $requestUri);
         
-        // Remove /app.php se existir (acesso direto)
+        // Remove /index.php e /app.php, que são o ponto de entrada
+        $requestUri = str_replace('/index.php', '', $requestUri); 
         $requestUri = str_replace('/app.php', '', $requestUri);
         
-        // Garante que sempre comece com /
-        $requestUri = $requestUri === '' ? '/' : $requestUri;
+        // NORMALIZAÇÃO: Remove barras duplas e barra final desnecessária
+        $requestUri = preg_replace('/(\/+)/','/', $requestUri); 
+        $requestUri = rtrim($requestUri, '/'); 
+
+        // Garante que a URI mínima seja '/' (para a rota home)
+        $requestUri = empty($requestUri) ? '/' : $requestUri;
+        
+        // Garante que o caminho sempre comece com uma única barra
         if ($requestUri[0] !== '/') {
             $requestUri = '/' . $requestUri;
         }
+        // --- Fim da Limpeza de URI ---
+
+        
 
         foreach ($this->routes as $route) {
             // Converte {param} em regex
@@ -119,7 +130,7 @@ class Router
     private function notFound()
     {
         http_response_code(404);
-        echo "<h1>404 - Página não encontrada</h1>";
+        echo "<h1>404 - Páginaaaaa não encontrada</h1>";
         exit;
     }
 }

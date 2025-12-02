@@ -159,5 +159,7 @@ INSERT IGNORE INTO produtos (prod_nome, prod_preco, cat_codigo, prod_descricao) 
 ('Pão Integral Fermentação Natural', 18.00, 4, 'Pão integral caseiro');
 
 -- Admin inicial (senha: 123456)
-INSERT IGNORE INTO gestores (gst_nome, gst_email, gst_senha, gst_role)
+INSERT IGNORE INTO gestores (gst_nome, gst_email, gst_senha, gst_role) -- senha: password
 VALUES ('Administrador', 'admin@encomendaschef.local', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin');
+
+
